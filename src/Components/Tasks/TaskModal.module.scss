@@ -92,3 +92,23 @@
     padding: 8px 16px;
   }
 }
+
+@media (max-height: 600px) and (orientation: landscape) {
+  .taskModal  {
+    p {
+    font-size: 13px;
+    padding: 5px 0;
+    height: 20px;
+  }
+    input, textarea {
+    padding: 5px 24px;
+    margin: 10px auto 0;
+    line-height: 1.5;
+  }
+  textarea {
+    height: 70px;
+  }
+  
+}
+  
+}

@@ -2,9 +2,7 @@
 
 .taskItem {
   display: grid;
-  grid-template-areas:
-    'title deadline isdone options'
-    'description  description description description';
+  grid-template-areas: 'title deadline isdone options' 'description description description description';
   grid-template-columns: 5fr 3fr 1.8fr 0.5fr;
   column-gap: 8px;
   justify-content: center;

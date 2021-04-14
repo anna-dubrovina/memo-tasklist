@@ -7,7 +7,7 @@
   border: 1px solid #ccc;
   box-shadow: 1px 1px 1px black;
   left: 15%;
-  top: 30%;
+  top: 20%;
   box-sizing: border-box;
   transition: all 0.3s ease-out;
   padding: 24px;
@@ -29,5 +29,12 @@
     left: 5%;
     top: 15%;
     padding: 16px 8px;
+  }
+}
+
+@media (max-height: 600px) and (orientation: landscape) {
+  .modal {
+    top: 5%; 
+    padding: 8px 16px;
   }
 }
