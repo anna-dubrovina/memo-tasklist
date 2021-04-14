@@ -1,0 +1,51 @@
+@import '../../styles/variables';
+
+.sideDrawer {
+  position: fixed;
+  width: 320px;
+  max-width: 80%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 200;
+  padding: 32px 16px;
+  background: $secondary-light-color;
+  transition: transform 0.3s ease-out;
+  nav {
+    border-top: 1px solid $primary-color;
+    width: 90%;
+    margin: 0 auto;
+    text-align: center;
+    padding-top: 10px;
+    font-size: 20px;
+    ul li{
+      margin: 16px;
+      a {
+        padding: 8px;
+        &:hover {
+          color: $primary-color;
+        }
+      }
+    }
+  }
+}
+
+.logoWrapper {
+  width: 180px;
+  margin: 16px auto;
+
+}
+
+@media (min-width: 550px) {
+  .sideDrawer {
+    display: none;
+  }
+}
+
+.open {
+  transform: translateX(0);
+}
+
+.close {
+  transform: translateX(-100vw);
+}

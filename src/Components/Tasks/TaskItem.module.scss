@@ -1,0 +1,147 @@
+@import '../../styles/variables';
+
+.taskItem {
+  display: grid;
+  grid-template-areas:
+    'title deadline isdone options'
+    'description  description description description';
+  grid-template-columns: 5fr 3fr 1.8fr 0.5fr;
+  column-gap: 8px;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  text-align: left;
+  position: relative;
+  padding: 8px 24px;
+  margin: 8px auto;
+  border: solid 1px $primary-color;
+  background: $light-color;
+  border-radius: 5px;
+  position: relative;
+  p {
+    font-size: 12px;
+    font-weight: 300;
+    grid-area: description;
+    border-top: 1px solid $secondary-color;
+    padding: 16px;
+  }
+  label {
+    color: $secondary-color;
+    font-weight: 600;
+    font-size: 11px;
+    grid-area: isdone;
+    background: rgba(255, 255, 255, 0.8);
+    width: 90px;
+    height: 30px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    text-align: center;
+    padding: 0 8px;
+    input[type='checkbox'] {
+      position: relative;
+      width: 16px;
+      height: 16px;
+      -webkit-appearance: initial;
+      border-radius: 3px;
+      outline: none;
+      cursor: pointer;
+      border: 1px solid $secondary-color;
+      &:hover {
+        transform: scale(1.1);
+      }
+      &:checked:after {
+        content: '';
+        background: url('../../assets/checkmark.png') no-repeat center
+          center/cover;
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        top: -8px;
+        left: -2px;
+      }
+    }
+  }
+}
+
+.taskTitle {
+  grid-area: title;
+  display: flex;
+  align-items: center;
+  h4 {
+    font-weight: 600;
+    margin: 15px 10px;
+  }
+  img {
+    padding: 5px 10px;
+    width: 40px;
+    height: 30px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease-out;
+    cursor: pointer;
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+  }
+}
+
+.deadline {
+  font-size: 13px;
+  grid-area: deadline;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  img {
+    height: 20px;
+    width: 20px;
+    padding: 0;
+    margin-right: 10px;
+  }
+}
+
+.deleteBtn {
+  grid-area: options;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease-out;
+  width: 40px;
+  height: 30px;
+  padding: 5px 10px;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+}
+
+.optionsBtn {
+  grid-area: options;
+}
+
+@media (max-width: 800px) {
+  .taskItem {
+    width: 95%;
+  }
+}
+
+@media (max-width: 600px) {
+  .taskItem {
+    padding: 8px 16px;
+    grid-template-areas:
+      'title title title'
+      'isdone deadline options'
+      'description description description';
+    grid-template-columns: 2fr 2fr 0.5fr;
+    gap: 5px;
+    .taskTitle {
+      border-bottom: 1px solid $secondary-color;
+      width: 100%;
+      text-align: center;
+      h4 {
+        width: 90%;
+      }
+    }
+    p {
+      text-align: center;
+    }
+  }
+}

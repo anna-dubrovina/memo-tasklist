@@ -1,0 +1,33 @@
+@import '../../styles/variables';
+
+.modal {
+  position: fixed;
+  z-index: 500;
+  width: 70%;
+  border: 1px solid #ccc;
+  box-shadow: 1px 1px 1px black;
+  left: 15%;
+  top: 30%;
+  box-sizing: border-box;
+  transition: all 0.3s ease-out;
+  padding: 24px;
+  border-radius: 10px;
+  background: $light-color;
+  text-align: center;
+}
+
+@media (min-width: 900px) {
+  .modal {
+    width: 800px;
+    left: calc(50% - 400px);
+  }
+}
+
+@media (max-width: 550px) {
+  .modal {
+    width: 90%;
+    left: 5%;
+    top: 15%;
+    padding: 16px 8px;
+  }
+}

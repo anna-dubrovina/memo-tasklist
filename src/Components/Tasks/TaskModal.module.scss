@@ -1,0 +1,94 @@
+@import '../../styles/variables';
+
+.taskModal {
+  position: relative;
+  div {
+    background: transparent;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    cursor: pointer;
+    div {
+      width: 25px;
+      height: 4px;
+      background-color: $secondary-color;
+      transform: rotate(45deg);
+      transition: transform 0.5s ease-out;
+      &:after {
+        content: '';
+        width: 25px;
+        height: 4px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: rotate(90deg);
+        background-color: $secondary-color;
+      }
+      &:hover {
+        transform: rotate(110deg);
+      }
+    }
+  }
+  h2 {
+    padding-top: 16px;
+    text-align: center;
+  }
+  p {
+    text-align: center;
+    font-size: 14px;
+    color: rgb(253, 123, 76);
+    padding: 10px 0 5px;
+    height: 25px;
+    font-weight: 600;
+  }
+  input,
+  textarea {
+    -webkit-appearance: none;
+    font-family: 'Raleway', sans-serif;
+    display: block;
+    outline: none;
+    border: none;
+    border-bottom: 2px solid $primary-color;
+    background: transparent;
+    line-height: 2;
+    font-size: 16px;
+    margin: 8px auto 24px;
+    padding: 8px 32px;
+    width: 80%;
+    &:focus {
+      border-bottom: 2px solid $secondary-color;
+    }
+    &:focus::placeholder {
+      font-size: 17px;
+    }
+  }
+  textarea {
+    border: 2px solid $primary-color;
+    height: 100px;
+    overflow: hidden;
+    &:focus {
+      border: 2px solid $secondary-color;
+    }
+  }
+}
+
+.invalid input:first-of-type {
+  border: none;
+  border-bottom: 2px solid rgb(253, 123, 76);
+  background: rgba(245, 165, 137, 0.2);
+  &:focus {
+    border-bottom: 2px solid rgb(253, 123, 76);
+  }
+  &::placeholder {
+    color: rgb(253, 123, 76);
+  }
+}
+
+@media (max-width: 550px) {
+  .taskModal input,
+  .taskModal textarea {
+    padding: 8px 16px;
+  }
+}

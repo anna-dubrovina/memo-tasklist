@@ -1,0 +1,48 @@
+@import './variables';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Raleway', -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: url('../assets/cover.jpg') fixed no-repeat center center/cover;
+  color: $dark-color;
+  line-height: 1.2;
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+.container {
+  max-width: 1200px;
+  overflow: hidden;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.active {
+  font-weight: 600;
+  border-bottom: 2px solid $dark-color;
+}
+
+@media (max-width: 550px) {
+  .active {
+    border: none;
+  }
+  .container {
+      padding: 0 20px;
+  }
+}

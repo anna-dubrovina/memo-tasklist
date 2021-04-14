@@ -1,0 +1,42 @@
+@import '../../styles/variables';
+
+.btn {
+  -webkit-appearance: none;
+  font-family: 'Raleway', sans-serif;
+  background-color: $primary-color;
+  display: block;
+  padding: 12px 16px;
+  min-width: 140px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-transform: uppercase;
+  margin: 8px auto;
+  font-size: 16px;
+  font-weight: 600;
+  outline: none;
+  transition: background-color 0.5s ease-out;
+}
+.btn:hover {
+  background-color: $secondary-color;
+}
+.btn:focus {
+  box-shadow: 0px 0px 2px $dark-color;
+  border: none;
+}
+
+.btnDark {
+  background-color: $dark-color;
+  color: $light-color;
+}
+.btnDark:hover {
+  background-color: $secondary-color;
+}
+
+.btnLight {
+  background-color: $light-color;
+  color: $dark-color;
+}
+.btnLight:hover {
+  background-color: $secondary-color;
+}

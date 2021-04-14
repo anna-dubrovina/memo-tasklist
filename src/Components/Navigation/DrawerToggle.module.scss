@@ -1,0 +1,25 @@
+@import '../../styles/variables';
+
+.drawerToggle {
+  width: 40px;
+  height: 50px;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  margin-left: 40px;
+  div {
+    width: 90%;
+    height: 3px;
+    background-color: $dark-color;
+  }
+}
+
+@media (min-width: 550px) {
+  .drawerToggle {
+    display: none;
+  }
+}
