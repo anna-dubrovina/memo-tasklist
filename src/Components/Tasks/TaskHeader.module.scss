@@ -1,0 +1,64 @@
+@import '../../styles/variables';
+
+.taskHeader {
+  display: grid;
+  grid-template-columns: 5fr 2fr 0.5fr;
+  column-gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  width: 80%;
+  padding: 8px 24px 0;
+  margin: 0 auto;
+  h1 {
+    padding: 16px 0;
+    margin: 0 auto;
+  }
+}
+
+.noTaskList {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  height: 100%;
+}
+
+.loader {
+  width: 80%;
+  margin: 5px auto;
+  height: 30px;
+}
+
+@media (max-width: 800px) {
+  .loader,
+  .taskHeader header {
+    width: 90%;
+  }
+}
+
+@media (max-width: 600px) {
+  .loader {
+    width: 100%;
+    margin: 0;
+  }
+  .taskHeader {
+    width: 100%;
+    grid-template-areas:
+      'title options'
+      'button button';
+    grid-template-columns: 3fr 0.5fr;
+    justify-content: space-around;
+    column-gap: 0px;
+    padding: 0;
+    h1 {
+      grid-area: title;
+      font-size: 28px;
+    }
+    button {
+      grid-area: button;
+    }
+    div {
+      grid-area: options;
+    }
+  }
+}

@@ -14,8 +14,10 @@ const Layout = (props) => {
   };
   return (
     <React.Fragment>
-      <Toolbar clicked={sideDrawerToggleHandler} />
-      <SideDrawer closed={sideDrawerClosedHandler} open={showSideDrawer} />
+      <header>
+        <Toolbar clicked={sideDrawerToggleHandler} />
+        <SideDrawer closed={sideDrawerClosedHandler} open={showSideDrawer} />
+      </header>
       <main className="container">{props.children}</main>
     </React.Fragment>
   );

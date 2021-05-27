@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { URL_DB } from '../dblink';
 
-
-
 export const TasksContext = React.createContext({
   tasks: [],
   isLoading: false,
@@ -190,21 +188,23 @@ export const TasksProvider = (props) => {
     );
   };
 
+  const context = {
+    tasks,
+    isLoading,
+    isError,
+    setIsError,
+    addTask,
+    editTask,
+    deleteTask,
+    toggleDone,
+    togglePin,
+    clearTasks,
+    toggleAllDone
+  };
+
   return (
     <TasksContext.Provider
-      value={{
-        tasks: tasks,
-        isLoading: isLoading,
-        isError: isError,
-        setIsError: setIsError,
-        addTask: addTask,
-        editTask: editTask,
-        deleteTask: deleteTask,
-        toggleDone: toggleDone,
-        togglePin: togglePin,
-        clearTasks: clearTasks,
-        toggleAllDone: toggleAllDone,
-      }}
+      value={context}
     >
       {props.children}
     </TasksContext.Provider>

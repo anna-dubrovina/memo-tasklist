@@ -1,16 +1,22 @@
+import React, { Suspense } from 'react';
 import { Route } from 'react-router';
-import Layout from './Components/Layout/Layout';
-import CurrentTasks from './Components/Tasks/CurrentTasks';
-import FinishedTasks from './Components/Tasks/FinishedTasks';
+
+import Layout from './components/Layout/Layout';
+import CurrentTasks from './pages/CurrentTasks';
+import Loader from './components/UI/Loader';
+import ErrorModal from './components/UI/ErrorModal';
+
+const finishedTasksPage = React.lazy(() => import('./pages/FinishedTasks'));
 
 const App = () => {
   return (
-    <div className="App">
-      <Layout>
+    <Layout>
+      <ErrorModal />
+      <Suspense fallback={<Loader />}>
         <Route path="/" exact component={CurrentTasks} />
-        <Route path="/finished" component={FinishedTasks} />
-      </Layout>
-    </div>
+        <Route path="/finished" component={finishedTasksPage} />
+      </Suspense>
+    </Layout>
   );
 };
 

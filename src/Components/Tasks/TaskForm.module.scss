@@ -1,6 +1,6 @@
 @import '../../styles/variables';
 
-.taskModal {
+.taskForm {
   position: relative;
   div {
     background: transparent;
@@ -87,14 +87,14 @@
 }
 
 @media (max-width: 550px) {
-  .taskModal input,
-  .taskModal textarea {
+  .taskForm input,
+  .taskForm textarea {
     padding: 8px 16px;
   }
 }
 
 @media (max-height: 600px) and (orientation: landscape) {
-  .taskModal  {
+  .taskForm  {
     p {
     font-size: 13px;
     padding: 5px 0;

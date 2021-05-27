@@ -38,11 +38,32 @@ ul {
   border-bottom: 2px solid $dark-color;
 }
 
+.taskWrapper {
+  margin: 100px auto;
+  padding: 32px;
+  max-width: 1000px;
+  min-height: 300px;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: center;
+  box-shadow: 1px 1px 5px $dark-color;
+  background: #f4f4f4a6;
+  border-radius: 10px;
+  z-index: 8;
+}
+
 @media (max-width: 550px) {
   .active {
     border: none;
   }
   .container {
-      padding: 0 20px;
+    padding: 0 20px;
+  }
+
+  .taskWrapper {
+    padding: 20px;
   }
 }

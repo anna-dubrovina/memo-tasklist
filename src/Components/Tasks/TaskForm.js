@@ -1,38 +1,45 @@
-import { useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
+import { TasksContext } from '../../store/task-context';
 import Button from '../UI/Button';
-import styles from './TaskModal.module.scss';
+import styles from './TaskForm.module.scss';
 
 const tzoffset = new Date().getTimezoneOffset() * 60000;
 const currentDate = new Date(Date.now() - tzoffset)
   .toISOString()
   .substring(0, 16);
 
-const TaskModal = (props) => {
-  const initialTaskForm = {
-    title: '',
-    description: '',
-    deadline: currentDate,
-  };
-  const [taskForm, setTaskForm] = useState(initialTaskForm);
+const INITIALFORMSTATE = {
+  title: '',
+  description: '',
+  deadline: currentDate,
+};
+
+const TaskForm = (props) => {
+  const [taskForm, setTaskForm] = useState(INITIALFORMSTATE);
   const [isValid, setIsValid] = useState(true);
   const [isTouched, setIsTouched] = useState(false);
+  const { addingMode, editingMode, editingData } = props;
+  const { addTask, editTask } = useContext(TasksContext);
 
-  const setInputValues = () => {
+  const setInputValues = useCallback(() => {
     if (
-      taskForm.title === props.inputValues.name ||
-      taskForm.description === props.inputValues.description ||
+      taskForm.title === editingData.name ||
+      taskForm.description === editingData.description ||
       isTouched
     ) {
       return;
     }
-    const updatedTaskForm = {
-      ...taskForm,
-      title: props.inputValues.name,
-      description: props.inputValues.description,
-      deadline: props.inputValues.deadline,
-    };
-    setTaskForm(updatedTaskForm);
-  };
+
+    setTaskForm((curTaskForm) => {
+      const updatedTaskForm = {
+        ...curTaskForm,
+        title: editingData.name,
+        description: editingData.description,
+        deadline: editingData.deadline,
+      };
+      return updatedTaskForm;
+    });
+  }, [taskForm, editingData, isTouched]);
 
   const inputChangedHandler = (e, inputName) => {
     setIsTouched(true);
@@ -56,39 +63,39 @@ const TaskModal = (props) => {
       description: taskForm.description,
       deadline: taskForm.deadline,
     };
-    if (props.addingMode) {
-      props.addTask(newTask);
-    } else if (props.editingMode) {
-      props.editTask(props.inputValues, newTask);
+    if (addingMode) {
+      addTask(newTask);
+    } else if (editingMode) {
+      editTask(editingData, newTask);
     }
     props.closeModal();
   };
-  
 
-  if (props.editingMode) {
-    setInputValues();
-  }
-  if (
-    !props.addingMode &&
-    !props.editingMode &&
-    (taskForm.title !== initialTaskForm.title ||
-      taskForm.description !== initialTaskForm.description)
-  ) {
-    setTaskForm(initialTaskForm);
-  }
-  if (!props.addingMode && !props.editingMode && !isValid) {
-    setIsValid(true);
-  }
-  if (!props.editingMode && isTouched) {
-    setIsTouched(false);
-  }
+  useEffect(() => {
+    if (editingMode) {
+      setInputValues();
+    }
+    if (
+      !addingMode &&
+      !editingMode &&
+      (taskForm.title !== '' || taskForm.description !== '')
+    ) {
+      setTaskForm(INITIALFORMSTATE);
+    }
+    if (!addingMode && !editingMode && !isValid) {
+      setIsValid(true);
+    }
+    if (!editingMode && isTouched) {
+      setIsTouched(false);
+    }
+  }, [isTouched, isValid, addingMode, editingMode, taskForm, setInputValues]);
 
   return (
-    <div className={styles.taskModal}>
+    <div className={styles.taskForm}>
       <div onClick={props.closeModal}>
         <div></div>
       </div>
-      <h2>{props.addingMode ? 'Add New Task' : 'Edit Task'}</h2>
+      <h2>{addingMode ? 'Add New Task' : 'Edit Task'}</h2>
 
       <form
         onSubmit={formSubmitHandler}
@@ -117,10 +124,12 @@ const TaskModal = (props) => {
           value={taskForm.description}
         />
 
-        <Button>{props.addingMode ? 'Add new task' : 'Confirm Changes'}</Button>
+        <Button submit={true}>
+          {addingMode ? 'Add new task' : 'Confirm Changes'}
+        </Button>
       </form>
     </div>
   );
 };
 
-export default TaskModal;
+export default TaskForm;

@@ -1,3 +1,5 @@
+import { useContext } from 'react';
+import { TasksContext } from '../../store/task-context';
 import ContextMenu from '../UI/ContextMenu';
 import deleteIcon from '../../assets/trash.png';
 import pinnedIcon from '../../assets/paper-pin.png';
@@ -5,6 +7,8 @@ import deadlineIcon from '../../assets/deadline.png';
 import styles from './TaskItem.module.scss';
 
 const TaskItem = (props) => {
+  const { toggleDone, togglePin, deleteTask } = useContext(TasksContext);
+
   let deadlineContent = (
     <span className={styles.deadline}>
       <img src={deadlineIcon} alt="deadline icon" />
@@ -14,15 +18,17 @@ const TaskItem = (props) => {
 
   let optionsContent = (
     <ContextMenu className={styles.optionsBtn}>
-      <div onClick={props.pinnedClick}> {props.pinned ? 'Unpin' : 'Pin'}</div>
+      <div onClick={() => togglePin(props.taskObj)}>
+        {props.pinned ? 'Unpin' : 'Pin'}
+      </div>
       <div onClick={props.editClick}>Edit</div>
-      <div onClick={props.deleteClick}>Delete</div>
+      <div onClick={() => deleteTask(props.taskObj)}>Delete</div>
     </ContextMenu>
   );
-  
+
   if (props.checked) {
     optionsContent = (
-      <div onClick={props.deleteClick}>
+      <div onClick={() => deleteTask(props.taskObj)}>
         <img className={styles.deleteBtn} src={deleteIcon} alt="Delete" />
       </div>
     );
@@ -37,20 +43,20 @@ const TaskItem = (props) => {
           <img
             src={pinnedIcon}
             className={styles.pinned}
-            onClick={props.pinnedClick}
+            onClick={() => togglePin(props.taskObj)}
             alt="pinned"
           />
         )}
       </div>
       {deadlineContent}
-      <label>
+      <label htmlFor="isDone">
         <input
           name="isDone"
           type="checkbox"
           checked={props.checked}
-          onChange={props.toggleDone}
+          onChange={() => toggleDone(props.taskObj)}
         />
-        <span>{props.labelName}</span>
+        <span>Done</span>
       </label>
       {optionsContent}
 

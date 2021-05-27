@@ -1,9 +1,10 @@
-import React from 'react'
+import React from 'react';
+import ReactDOM from 'react-dom';
 import Backdrop from './Backdrop';
 import styles from './Modal.module.scss';
 
 const Modal = (props) => {
-  return (
+  return ReactDOM.createPortal(
     <React.Fragment>
       <Backdrop show={props.show} clicked={props.modalClosed} />
       <div
@@ -15,7 +16,8 @@ const Modal = (props) => {
       >
         {props.children}
       </div>
-    </React.Fragment>
+    </React.Fragment>,
+    document.getElementById('modal')
   );
 };
 
