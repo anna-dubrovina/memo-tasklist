@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { URL_DB } from '../dblink';
+import useHttp from '../hooks/use-http';
+import * as vars from '../utilities/global-vars';
 
 export const TasksContext = React.createContext({
   tasks: [],
@@ -9,182 +11,149 @@ export const TasksContext = React.createContext({
   addTask: () => {},
   editTask: () => {},
   deleteTask: () => {},
-  toggleDone: () => {},
-  togglePin: () => {},
-  toggleAllDone: () => {},
-  clearTasks: () => {},
+  toggleTask: () => {},
+  changeAll: () => {},
 });
 
 export const TasksProvider = (props) => {
   const [tasks, setTaskList] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
+  const { isLoading, isError, setIsError, sendRequest } = useHttp();
 
-  const httpRequest = (url, method, body, updatedTasks, requestType) => {
-    setIsLoading(true);
-    fetch(url, {
-      method: method,
-      body: body,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((res) => res.json())
-      .then((resData) => {
-        if (requestType === 'GET_TASKS') {
-          for (const key in resData) {
-            updatedTasks.push({
-              id: key,
-              name: resData[key].name,
-              description: resData[key].description,
-              deadline: resData[key].deadline,
-              isDone: resData[key].isDone,
-              isPinned: resData[key].isPinned,
-            });
-          }
-        } else if (requestType === 'ADD_TASK') {
-          updatedTasks[updatedTasks.length - 1].id = resData.name;
-        }
-        setTaskList(updatedTasks);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        setIsLoading(false);
-        setIsError(true);
+  const getTasksRequest = (resData) => {
+    const updatedTasks = [];
+    for (const key in resData) {
+      updatedTasks.push({
+        id: key,
+        name: resData[key].name,
+        description: resData[key].description,
+        deadline: resData[key].deadline,
+        isDone: resData[key].isDone,
+        isPinned: resData[key].isPinned,
       });
+      setTaskList(updatedTasks);
+    }
   };
 
-  const toggle = (selectedTask, toggledProperty) => {
+  const addTaskRequest = (newTask, resData) => {
+    newTask.id = resData.name;
+    setTaskList((prevTasks) => prevTasks.concat(newTask));
+  };
+
+  const deleteTaskRequest = (selectedTask) => {
+    setTaskList((prevTasks) =>
+      prevTasks.filter((t) => t.id !== selectedTask.id)
+    );
+  };
+
+  const editTaskRequest = (selectedTask, editedTask) => {
     const taskIndex = tasks.findIndex((t) => t.id === selectedTask.id);
-    const updatedTasks = [...tasks];
-    const newStatus = !tasks[taskIndex][toggledProperty];
-    updatedTasks[taskIndex] = {
-      ...tasks[taskIndex],
-      [toggledProperty]: newStatus,
-    };
-    return updatedTasks;
+    setTaskList((prevTasks) => {
+      const updatedTasks = [...prevTasks];
+      updatedTasks[taskIndex] = {
+        ...tasks[taskIndex],
+        name: editedTask.name,
+        description: editedTask.description,
+        deadline: editedTask.deadline,
+      };
+      return updatedTasks;
+    });
   };
 
-  const changeAllTasks = (type) => {
+  const toggleTaskRequest = (selectedTask, toggledProperty) => {
+    const taskIndex = tasks.findIndex((t) => t.id === selectedTask.id);
+    setTaskList((prevTasks) => {
+      const updatedTasks = [...prevTasks];
+      const newStatus = !prevTasks[taskIndex][toggledProperty];
+      updatedTasks[taskIndex] = {
+        ...tasks[taskIndex],
+        [toggledProperty]: newStatus,
+      };
+      return updatedTasks;
+    });
+  };
+
+  const changeAllRequest = (page, action) => {
     let updatedTasks;
-    switch (type) {
-      case 'current_toggleAll':
-        updatedTasks = tasks.map((t) => {
+    setTaskList((prevTasks) => {
+      if (page === vars.CURRENT && action === vars.TOGGLE_ALL) {
+        updatedTasks = prevTasks.map((t) => {
           return { ...t, isDone: true };
         });
-        break;
-      case 'current_clearAll':
-        updatedTasks = tasks.filter((t) => t.isDone);
-        break;
-      case 'finished_toggleAll':
-        updatedTasks = tasks.map((t) => {
+      }
+      if (page === vars.CURRENT && action === vars.CLEAR_ALL) {
+        updatedTasks = prevTasks.filter((t) => t.isDone);
+      }
+      if (page === vars.FINISHED && action === vars.TOGGLE_ALL) {
+        updatedTasks = prevTasks.map((t) => {
           return { ...t, isDone: false };
         });
-        break;
-      case 'finished_clearAll':
-        updatedTasks = tasks.filter((t) => !t.isDone);
-        break;
-      default:
-        return updatedTasks;
-    }
+      }
+      if (page === vars.FINISHED && action === vars.CLEAR_ALL) {
+        updatedTasks = prevTasks.filter((t) => !t.isDone);
+      }
+      return updatedTasks;
+    });
 
     let firebaseObj = {};
     updatedTasks.forEach((task) => {
       firebaseObj[task.id] = { ...task };
     });
 
-    return [updatedTasks, firebaseObj];
+    return firebaseObj;
   };
 
   useEffect(() => {
-    const updatedTasks = [];
-    httpRequest(
-      `${URL_DB}/tasks.json`,
-      'GET',
-      null,
-      updatedTasks,
-      'GET_TASKS'
-    );
-  }, []);
+    sendRequest({ url: `${URL_DB}/tasks.json` }, getTasksRequest);
+  }, [sendRequest]);
 
   const addTask = (newTask) => {
-    const updatedTasks = [...tasks];
-    updatedTasks.push(newTask);
-    httpRequest(
-      `${URL_DB}/tasks.json`,
-      'POST',
-      JSON.stringify(newTask),
-      updatedTasks,
-      'ADD_TASK'
+    sendRequest(
+      { url: `${URL_DB}/tasks.json`, method: 'POST', body: newTask },
+      addTaskRequest.bind(null, newTask)
     );
   };
 
   const editTask = (selectedTask, editedTask) => {
-    const taskIndex = tasks.findIndex((t) => t.id === selectedTask.id);
-    const updatedTasks = [...tasks];
-    updatedTasks[taskIndex] = {
-      ...tasks[taskIndex],
-      name: editedTask.name,
-      description: editedTask.description,
-      deadline: editedTask.deadline,
-    };
-
-    httpRequest(
-      `${URL_DB}/tasks/${selectedTask.id}.json`,
-      'PUT',
-      JSON.stringify(updatedTasks[taskIndex]),
-      updatedTasks
+    sendRequest(
+      {
+        url: `${URL_DB}/tasks/${selectedTask.id}.json`,
+        method: 'PUT',
+        body: editedTask,
+      },
+      editTaskRequest.bind(null, selectedTask, editedTask)
     );
   };
 
   const deleteTask = (selectedTask) => {
-    const updatedTasks = tasks.filter((t) => t.id !== selectedTask.id);
-    httpRequest(
-      `${URL_DB}/tasks/${selectedTask.id}.json`,
-      'DELETE',
-      null,
-      updatedTasks
+    sendRequest(
+      {
+        url: `${URL_DB}/tasks/${selectedTask.id}.json`,
+        method: 'DELETE',
+      },
+      deleteTaskRequest.bind(null, selectedTask)
     );
   };
 
-  const toggleDone = (selectedTask) => {
-    const updatedTasks = toggle(selectedTask, 'isDone');
-    httpRequest(
-      `${URL_DB}/tasks/${selectedTask.id}.json`,
-      'PUT',
-      JSON.stringify({ ...selectedTask, isDone: !selectedTask.isDone }),
-      updatedTasks
+  const toggleTask = (selectedTask, toggledProperty) => {
+    sendRequest(
+      {
+        url: `${URL_DB}/tasks/${selectedTask.id}.json`,
+        method: 'PUT',
+        body: { ...selectedTask, isDone: !selectedTask.isDone },
+      },
+      toggleTaskRequest.bind(null, selectedTask, toggledProperty)
     );
   };
 
-  const togglePin = (selectedTask) => {
-    const updatedTasks = toggle(selectedTask, 'isPinned');
-    httpRequest(
-      `${URL_DB}/tasks/${selectedTask.id}.json`,
-      'PUT',
-      JSON.stringify({ ...selectedTask, isPinned: !selectedTask.isPinned }),
-      updatedTasks
-    );
-  };
-
-
-  const toggleAllDone = (listType) => {
-    const [updatedTasks, firebaseObj] = changeAllTasks(listType + '_toggleAll');
-    httpRequest(
-      `${URL_DB}/tasks.json`,
-      'PUT',
-      JSON.stringify(firebaseObj),
-      updatedTasks
-    );
-  };
-
-  const clearTasks = (listType) => {
-    const [updatedTasks, firebaseObj] = changeAllTasks(listType + '_clearAll');
-    httpRequest(
-      `${URL_DB}/tasks.json`,
-      'PUT',
-      JSON.stringify(firebaseObj),
-      updatedTasks
+  const changeAll = (pageType, actionType) => {
+    const firebaseObj = changeAllRequest(pageType, actionType);
+    sendRequest(
+      {
+        url: `${URL_DB}/tasks.json`,
+        method: 'PUT',
+        body: firebaseObj,
+      },
+      () => {}
     );
   };
 
@@ -196,16 +165,12 @@ export const TasksProvider = (props) => {
     addTask,
     editTask,
     deleteTask,
-    toggleDone,
-    togglePin,
-    clearTasks,
-    toggleAllDone
+    toggleTask,
+    changeAll,
   };
 
   return (
-    <TasksContext.Provider
-      value={context}
-    >
+    <TasksContext.Provider value={context}>
       {props.children}
     </TasksContext.Provider>
   );

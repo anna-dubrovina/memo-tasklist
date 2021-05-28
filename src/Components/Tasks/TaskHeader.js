@@ -1,67 +1,42 @@
 import { Fragment, useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import { TasksContext } from '../../store/task-context';
+import * as vars from '../../utilities/global-vars';
 import Button from '../UI/Button';
 import ContextMenu from '../UI/ContextMenu';
 import Loader from '../UI/Loader';
 import styles from './TaskHeader.module.scss';
 
-const CURRENT = 'current';
-const FINISHED = 'finished';
-
 const TaskHeader = (props) => {
   const [pageMode, setPageMode] = useState('');
-  const { isLoading, toggleAllDone, clearTasks } = useContext(TasksContext);
+  const { isLoading, changeAll } = useContext(TasksContext);
+
   const { pathname } = useLocation();
 
   useEffect(() => {
     if (pathname === '/') {
-      setPageMode(CURRENT);
+      setPageMode(vars.CURRENT);
     } else {
-      setPageMode(FINISHED);
+      setPageMode(vars.FINISHED);
     }
   }, [pathname]);
 
-
   let taskHeaderContent;
 
-  if (pageMode === CURRENT && !props.hasTaskList) {
-    taskHeaderContent = (
-      <Fragment>
-        <Button clicked={props.openAddModal}>New Task</Button>
-        {isLoading ? <Loader /> : <h3> You have no current tasks </h3>}
-      </Fragment>
-    );
+  if (!props.hasTaskList) {
+    taskHeaderContent = isLoading ? <Loader /> : <h3> You have no tasks </h3>;
   }
 
-  if (pageMode === CURRENT && props.hasTaskList) {
+  if (props.hasTaskList) {
     taskHeaderContent = (
       <Fragment>
-        <Button clicked={props.openAddModal}> New Task</Button>
         <ContextMenu maincontext>
-          <div onClick={() => toggleAllDone(CURRENT)}>Done All</div>
-          <div onClick={() => clearTasks(CURRENT)}>Clear All</div>
-        </ContextMenu>
-        <div className={styles.loader}>{isLoading && <Loader />}</div>
-      </Fragment>
-    );
-  }
-
-  if (pageMode === FINISHED && !props.hasTaskList) {
-    taskHeaderContent = isLoading ? (
-      <Loader />
-    ) : (
-      <h3> You have no finished tasks </h3>
-    );
-  }
-
-  if (pageMode === FINISHED && props.hasTaskList) {
-    taskHeaderContent = (
-      <Fragment>
-        <span></span>
-        <ContextMenu maincontext>
-          <div onClick={() => toggleAllDone(FINISHED)}>Repeat All</div>
-          <div onClick={() => clearTasks(FINISHED)}>Clear All</div>
+          <div onClick={() => changeAll(pageMode, vars.TOGGLE_ALL)}>
+            {pageMode === vars.CURRENT ? 'Done All' : 'Repeat All'}
+          </div>
+          <div onClick={() => changeAll(pageMode, vars.CLEAR_ALL)}>
+            Clear All
+          </div>
         </ContextMenu>
         <div className={styles.loader}>{isLoading && <Loader />}</div>
       </Fragment>
@@ -69,8 +44,13 @@ const TaskHeader = (props) => {
   }
 
   return (
-    <header className={props.hasTaskList ? styles.taskHeader : styles.noTaskList}>
-      <h1>{pageMode === CURRENT ? 'Current Tasks' : 'CompletedTasks'}</h1>
+    <header
+      className={props.hasTaskList ? styles.taskHeader : styles.noTaskList}
+    >
+      <h1>{pageMode === vars.CURRENT ? 'Current Tasks' : 'Completed Tasks'}</h1>
+      {pageMode === vars.CURRENT ? (
+        <Button clicked={props.openAddModal}>New Task</Button>
+      ) : <span />}
       {taskHeaderContent}
     </header>
   );

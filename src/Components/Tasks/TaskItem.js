@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { TasksContext } from '../../store/task-context';
+import * as vars from '../../utilities/global-vars';
 import ContextMenu from '../UI/ContextMenu';
 import deleteIcon from '../../assets/trash.png';
 import pinnedIcon from '../../assets/paper-pin.png';
@@ -7,7 +8,7 @@ import deadlineIcon from '../../assets/deadline.png';
 import styles from './TaskItem.module.scss';
 
 const TaskItem = (props) => {
-  const { toggleDone, togglePin, deleteTask } = useContext(TasksContext);
+  const { toggleTask, deleteTask } = useContext(TasksContext);
 
   let deadlineContent = (
     <span className={styles.deadline}>
@@ -18,7 +19,7 @@ const TaskItem = (props) => {
 
   let optionsContent = (
     <ContextMenu className={styles.optionsBtn}>
-      <div onClick={() => togglePin(props.taskObj)}>
+      <div onClick={() => toggleTask(props.taskObj, vars.IS_PINNED)}>
         {props.pinned ? 'Unpin' : 'Pin'}
       </div>
       <div onClick={props.editClick}>Edit</div>
@@ -43,7 +44,7 @@ const TaskItem = (props) => {
           <img
             src={pinnedIcon}
             className={styles.pinned}
-            onClick={() => togglePin(props.taskObj)}
+            onClick={() => toggleTask(props.taskObj, vars.IS_PINNED)}
             alt="pinned"
           />
         )}
@@ -54,7 +55,7 @@ const TaskItem = (props) => {
           name="isDone"
           type="checkbox"
           checked={props.checked}
-          onChange={() => toggleDone(props.taskObj)}
+          onChange={() => toggleTask(props.taskObj, vars.IS_DONE)}
         />
         <span>Done</span>
       </label>
