@@ -29,9 +29,8 @@ ul {
 }
 
 footer {
-  height: 40px;
+  height: 50px;
   width: 100%;
-  padding: 10px;
   background: #abdfded0;
   position: fixed;
   z-index: 7;
@@ -41,6 +40,7 @@ footer {
   justify-content: space-around;
   p {
     font-size: 12px;
+    padding: 5px 10px;
   }
 
 }
@@ -75,6 +75,9 @@ footer {
 }
 
 @media (max-width: 550px) {
+  footer {
+    flex-direction: column;
+  }
   .active {
     border: none;
   }
