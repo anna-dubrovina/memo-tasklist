@@ -14,6 +14,8 @@ body {
   background: url('../assets/cover.jpg') fixed no-repeat center center/cover;
   color: $dark-color;
   line-height: 1.2;
+}
+#root {
   min-height: 100vh;
 }
 
@@ -24,6 +26,23 @@ a {
 
 ul {
   list-style: none;
+}
+
+footer {
+  height: 40px;
+  width: 100%;
+  padding: 10px;
+  background: #abdfded0;
+  position: fixed;
+  z-index: 7;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  p {
+    font-size: 12px;
+  }
+
 }
 
 .container {

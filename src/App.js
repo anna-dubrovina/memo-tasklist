@@ -10,7 +10,7 @@ const finishedTasksPage = React.lazy(() => import('./pages/FinishedTasks'));
 
 const App = () => {
   return (
-    <Layout>
+    <Layout className="App">
       <ErrorModal />
       <Suspense fallback={<Loader />}>
         <Route path="/" exact component={CurrentTasks} />
