@@ -1,7 +1,6 @@
 @import '../../styles/variables';
 
-.taskForm {
-  position: relative;
+.formHeader {
   div {
     background: transparent;
     width: 30px;
@@ -35,6 +34,9 @@
     padding-top: 16px;
     text-align: center;
   }
+}
+.taskForm {
+  position: relative;
   p {
     text-align: center;
     font-size: 14px;
@@ -57,6 +59,9 @@
     margin: 8px auto 24px;
     padding: 8px 32px;
     width: 80%;
+    &::placeholder {
+      color: $dark-color;
+    }
     &:focus {
       border-bottom: 2px solid $secondary-color;
     }
@@ -71,6 +76,27 @@
     &:focus {
       border: 2px solid $secondary-color;
     }
+  }
+}
+
+.deadlineInput {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  margin: 8px auto 24px;
+  label {
+    font-family: 'Raleway', sans-serif;
+    border-bottom: 2px solid $primary-color;
+    background: transparent;
+    line-height: 2;
+    font-size: 16px;
+    padding: 9px 5px;
+    width: 20%;
+  }
+  input {
+    margin: 0px;
+    width: 80%;
   }
 }
 
@@ -89,26 +115,36 @@
 @media (max-width: 550px) {
   .taskForm input,
   .taskForm textarea {
+    width: 95%;
     padding: 8px 16px;
+  }
+  .deadlineInput {
+    width: 95%;
+    label {
+      width: 30%;
+    }
+    input {
+      width: 70%;
+    }
+
   }
 }
 
 @media (max-height: 600px) and (orientation: landscape) {
-  .taskForm  {
+  .taskForm {
     p {
-    font-size: 13px;
-    padding: 5px 0;
-    height: 20px;
+      font-size: 13px;
+      padding: 5px 0;
+      height: 20px;
+    }
+    input,
+    textarea {
+      padding: 5px 24px;
+      margin: 10px auto 0;
+      line-height: 1.5;
+    }
+    textarea {
+      height: 70px;
+    }
   }
-    input, textarea {
-    padding: 5px 24px;
-    margin: 10px auto 0;
-    line-height: 1.5;
-  }
-  textarea {
-    height: 70px;
-  }
-  
-}
-  
 }

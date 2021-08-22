@@ -92,10 +92,12 @@ const TaskForm = (props) => {
 
   return (
     <div className={styles.taskForm}>
-      <div onClick={props.closeModal}>
-        <div></div>
+      <div className={styles.formHeader}>
+        <div onClick={props.closeModal}>
+          <div></div>
+        </div>
+        <h2>{addingMode ? 'Add New Task' : 'Edit Task'}</h2>
       </div>
-      <h2>{addingMode ? 'Add New Task' : 'Edit Task'}</h2>
 
       <form
         onSubmit={formSubmitHandler}
@@ -106,19 +108,24 @@ const TaskForm = (props) => {
         </p>
 
         <input
+          id="task-title"
           type="text"
           placeholder="Task Title"
           onChange={(e) => inputChangedHandler(e, 'title')}
           value={taskForm.title}
         />
-        <input
-          type="datetime-local"
-          placeholder="Deadline"
-          onChange={(e) => inputChangedHandler(e, 'deadline')}
-          value={taskForm.deadline}
-        />
+        <div className={styles.deadlineInput}>
+          <label htmlFor="deadline">Deadline:</label>
+          <input
+            type="datetime-local"
+            id="deadline"
+            onChange={(e) => inputChangedHandler(e, 'deadline')}
+            value={taskForm.deadline}
+          />
+        </div>
         <textarea
           type="text"
+          id="task-description"
           placeholder="Task Description"
           onChange={(e) => inputChangedHandler(e, 'description')}
           value={taskForm.description}
